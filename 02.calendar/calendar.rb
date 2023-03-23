@@ -9,8 +9,7 @@ month = Date.today.month
 options = OptionParser.new
 options = ARGV.getopts("","y:#{year}","m:#{month}")
 
-year_option = options.values[0].to_i
-month_option = options.values[1].to_i
+year_option, month_option = options.values.map(&:to_i)
 
 # 指定した年月の初めの日と終わりの日を取得
 start_day = Date.new(year_option, month_option, 1)
@@ -23,10 +22,11 @@ puts " 日 月 火 水 木 金 土"
 print space = "   " * start_day.wday
 
 # 取得した日数を繰り返す
-(start_day..end_day).each do |i|
-  if i.wday == 6
-      print i.day.to_s.rjust(2) + "\n"
+(start_day..end_day).each do |day|
+  print day.day.to_s.rjust(2)
+  if day.wday == 6
+    print "\n"
   else
-      print i.day.to_s.rjust(2) + " "
+    print " "
   end
 end
