@@ -24,9 +24,5 @@ print space = "   " * start_day.wday
 # 取得した日数を繰り返す
 (start_day..end_day).each do |day|
   print day.day.to_s.rjust(2)
-  if day.wday == 6
-    print "\n"
-  else
-    print " "
-  end
+  print day.wday == 6 ? "\n" : ' '
 end
