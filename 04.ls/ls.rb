@@ -12,19 +12,9 @@ def sort_file_vertical(array_files)
   column_number = array_files.size.quo(COLUMN_COUNT).ceil
   column_files = array_files.each_slice(column_number).to_a
   array_of_filenames = []
-  column_files.count.times do |i|
-    if i.zero?
-      if column_files[i + 1].nil?
-        array_of_filenames << column_files[i]
-        break
-      else
-        array_of_filenames = column_files[i].zip(column_files[i + 1]).map(&:flatten)
-      end
-
-    elsif i < (column_files.count - 1)
-      array_of_filenames = array_of_filenames.zip(column_files[i + 1]).map(&:flatten)
-    end
-  end
+  return column_files if column_files.length < 2  
+  array_of_filenames = column_files[0]
+  column_files[1..].each { |column| array_of_filenames = array_of_filenames.zip(column).map(&:flatten) }
   array_of_filenames
 end
 
