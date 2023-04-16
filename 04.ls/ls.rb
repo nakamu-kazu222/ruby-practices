@@ -5,14 +5,16 @@ require 'optparse'
 # 行数指定
 COLUMN_COUNT = 3
 
-def ls_argument
+def file_list_depending_options
   options = OptionParser.new
   option = {}
   options.on('-a') { |v| option[:a] = v }
   options.parse(ARGV)
-  array_files = Dir.glob('*')
-  array_files = Dir.foreach('.').sort if option[:a]
-  array_files
+  if option[:a]
+    Dir.foreach('.').sort
+  else
+    Dir.glob('*')
+  end
 end
 
 def align_file_characters(array_files)
@@ -40,7 +42,7 @@ def display_ls(array_of_filenames)
   end
 end
 
-array_files = ls_argument
+array_files = file_list_depending_options
 array_files = align_file_characters(array_files)
 array_of_filenames = sort_file_vertical(array_files)
 display_ls(array_of_filenames)
