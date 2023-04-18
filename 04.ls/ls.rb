@@ -6,12 +6,12 @@ require 'optparse'
 COLUMN_COUNT = 3
 
 def file_list_depending_options
-  options = OptionParser.new
   option = {}
-  options.on('-a') { |v| option[:a] = v }
-  options.parse(ARGV)
-  if option[:a]
-    Dir.foreach('.').sort
+  OptionParser.new do |opts|
+    opts.on('-r') { |v| option[:r] = v }
+  end.parse(ARGV)
+  if option[:r]
+    Dir.glob('*').reverse
   else
     Dir.glob('*')
   end
