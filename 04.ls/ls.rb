@@ -6,6 +6,16 @@ require 'etc'
 
 # 行数指定
 COLUMN_COUNT = 3
+PERMISSION_SYMBOL = {
+  '0' => '---',
+  '1' => '--x',
+  '2' => '-w-',
+  '3' => '-wx',
+  '4' => 'r--',
+  '5' => 'r-x',
+  '6' => 'rw-',
+  '7' => 'rwx'
+}.freeze
 
 def file_list_depending_options(option)
   options = OptionParser.new
@@ -37,33 +47,8 @@ def file_status_l_options
                                                                           min: file_mtime.min).ljust(12)
     file_nlink = file_status.nlink
     permission_eight_bit = file_status.mode.to_s(8)[-3..]
-    file_type = if File.file?(files)
-                  '-'
-                elsif File.directory?(files)
-                  'd'
-                elsif File.symlink?(files)
-                  'l'
-                elsif File.chardev?(files)
-                  'c'
-                elsif File.blockdev?(files)
-                  'b'
-                elsif File.socket?(files)
-                  's'
-                elsif File.pipe?(files)
-                  'p'
-                end
-    permission_symbol = {
-      '0' => '---',
-      '1' => '--x',
-      '2' => '-w-',
-      '3' => '-wx',
-      '4' => 'r--',
-      '5' => 'r-x',
-      '6' => 'rw-',
-      '7' => 'rwx'
-    }
-    file_mode_permission = file_type
-    file_mode_permission += permission_eight_bit.chars.map { |bit| permission_symbol[bit] }.join
+    file_mode_permission = file_type(files)
+    file_mode_permission += permission_eight_bit.chars.map { |bit| PERMISSION_SYMBOL[bit] }.join
     file_uid_size_max = [file_uid.size].max
     file_gid_size_max = [file_gid.size].max
     file_size_max = [file_size.to_s.size].max
@@ -77,10 +62,27 @@ def file_status_l_options
     file_size = file_status_list[4].to_s.rjust(file_size_max + 2)
     file_update_time = file_status_list[5]
     file_name = file_status_list[6]
-
     "#{file_mode_permission} #{file_nlink} #{file_uid} #{file_gid} #{file_size} #{file_update_time} #{file_name}"
   end
   array_files.unshift("total #{total_blocks}")
+end
+
+def file_type(file)
+  if File.file?(file)
+    '-'
+  elsif File.symlink?(file)
+    'l'
+  elsif File.directory?(file)
+    'd'
+  elsif File.chardev?(file)
+    'c'
+  elsif File.blockdev?(file)
+    'b'
+  elsif File.socket?(file)
+    's'
+  elsif File.pipe?(file)
+    'p'
+  end
 end
 
 def align_file_characters(array_files)
