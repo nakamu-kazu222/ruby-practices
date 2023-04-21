@@ -20,16 +20,33 @@ PERMISSION_SYMBOL = {
 def file_list_depending_options(option)
   options = OptionParser.new
   options.on('-l') { |v| option[:l] = v }
+  options.on('-a') { |v| option[:a] = v }
+  options.on('-r') { |v| option[:r] = v }
   options.parse(ARGV)
-  if option[:l]
-    file_status_l_options
+  if option[:l] && option[:a] && option[:r]
+    file_list = Dir.foreach('.').sort.reverse
+    file_status_l_options(file_list)
+  elsif option[:l]  && option[:a]
+    file_list = Dir.foreach('.').sort
+    file_status_l_options(file_list)
+  elsif option[:l]  && option[:r]
+    file_list = Dir.foreach('.').reverse
+    file_status_l_options(file_list)
+  elsif option[:a]  && option[:r]
+    Dir.foreach('.').sort.reverse
+  elsif option[:l]
+    file_list = Dir.glob('*')
+    file_status_l_options(file_list)
+  elsif option[:a]
+    Dir.foreach('.').sort
+  elsif option[:r]
+    Dir.glob('*').reverse
   else
     Dir.glob('*')
   end
 end
 
-def file_status_l_options
-  file_list = Dir.glob('*')
+def file_status_l_options(file_list)
   total_blocks = 0
   file_uid_size_max = 0
   file_gid_size_max = 0
@@ -59,7 +76,7 @@ def file_status_l_options
     file_nlink = file_status_list[1].to_s.rjust(2)
     file_uid = file_status_list[2].ljust(file_uid_size_max + 2)
     file_gid = file_status_list[3].ljust(file_gid_size_max + 2)
-    file_size = file_status_list[4].to_s.rjust(file_size_max + 2)
+    file_size = file_status_list[4].to_s.rjust(file_size_max + 3)
     file_update_time = file_status_list[5]
     file_name = file_status_list[6]
     "#{file_mode_permission} #{file_nlink} #{file_uid} #{file_gid} #{file_size} #{file_update_time} #{file_name}"
@@ -107,11 +124,11 @@ end
 
 def display_ls(array_of_filenames, option)
   if option[:l]
-    array_of_filenames.each { |primary_array_files| puts primary_array_files }
+    array_of_filenames.each { |display_filename| puts display_filename }
   else
-    array_of_filenames.each do |secondary_array_files|
-      secondary_array_files.each do |primary_array_files|
-        print primary_array_files
+    array_of_filenames.each do |display_filename|
+      display_filename.each do |display_filename|
+        print display_filename
       end
       print "\n"
     end
