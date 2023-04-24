@@ -23,27 +23,11 @@ def file_list_depending_options(option)
   options.on('-a') { |v| option[:a] = v }
   options.on('-r') { |v| option[:r] = v }
   options.parse(ARGV)
-  if option[:l] && option[:a] && option[:r]
-    file_list = Dir.foreach('.').sort.reverse
-    file_status_l_options(file_list)
-  elsif option[:l]  && option[:a]
-    file_list = Dir.foreach('.').sort
-    file_status_l_options(file_list)
-  elsif option[:l]  && option[:r]
-    file_list = Dir.foreach('.').reverse
-    file_status_l_options(file_list)
-  elsif option[:a]  && option[:r]
-    Dir.foreach('.').sort.reverse
-  elsif option[:l]
-    file_list = Dir.glob('*')
-    file_status_l_options(file_list)
-  elsif option[:a]
-    Dir.foreach('.').sort
-  elsif option[:r]
-    Dir.glob('*').reverse
-  else
-    Dir.glob('*')
-  end
+  file_list = Dir.glob('*')
+  file_list = Dir.foreach('.').sort if option[:a]
+  file_list = file_list.reverse if option[:r]
+  file_list = file_status_l_options(file_list) if option[:l]
+  file_list
 end
 
 def file_status_l_options(file_list)
