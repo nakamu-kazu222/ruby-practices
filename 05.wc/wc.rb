@@ -60,14 +60,13 @@ def word_line_size_count_in_array(acquisition_argument_filename)
     word_count = standard_input_text.split("\n").sum { |line| line.split.length }
     array_wc_count << { line_count:, word_count:, size_count:, file: '' }
 
-  elsif acquisition_argument_filename.count.positive?
+  else
     acquisition_argument_filename.each do |file|
       size_count = size_count_calc(file)
       line_count = line_count_calc(file)
       word_count = word_count_calc(file)
       array_wc_count << { line_count:, word_count:, size_count:, file: }
     end
-
     if acquisition_argument_filename.count > 1
       line_count = total_line_count_calc(acquisition_argument_filename)
       word_count = total_word_count_calc(acquisition_argument_filename)
@@ -75,8 +74,8 @@ def word_line_size_count_in_array(acquisition_argument_filename)
       file = 'total'.ljust(10)
       array_wc_count << { line_count:, word_count:, size_count:, file: }
     end
-    array_wc_count
   end
+  array_wc_count
 end
 
 def array_wc_count_adjust_indentation(option, array_wc_count)
@@ -90,7 +89,7 @@ def array_wc_count_adjust_indentation(option, array_wc_count)
       size_count_indented = data[:size_count].to_s.rjust(8)
     end
     file_indented = data[:file].ljust(10)
-    "#{line_count_indented} #{word_count_indented} #{size_count_indented} #{file_indented}"
+    [line_count_indented, word_count_indented, size_count_indented, ' ', file_indented].join
   end
 end
 
@@ -101,8 +100,6 @@ def display_wc(array_wc_count)
   end
 end
 
-option = select_options
-acquisition_argument_filename
 array_wc_count = word_line_size_count_in_array(acquisition_argument_filename)
-array_wc_count = array_wc_count_adjust_indentation(option, array_wc_count)
+array_wc_count = array_wc_count_adjust_indentation(select_options, array_wc_count)
 display_wc(array_wc_count)
