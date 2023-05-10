@@ -22,8 +22,7 @@ def acquisition_argument_filename
 end
 
 def size_count_calc(file)
-  file_status = File.stat(file)
-  file_status.size
+  File.stat(file).size
 end
 
 def line_count_calc(file)
@@ -41,81 +40,58 @@ def word_count_calc(file)
 end
 
 def total_size_count_calc(file_list)
-  file_list.sum { |file| File.stat(file).size }
+  file_list.sum { |file| size_count_calc(file) }
 end
 
 def total_line_count_calc(file_list)
-  file_list.sum { |file| File.foreach(file).count }
+  file_list.sum { |file| line_count_calc(file) }
 end
 
 def total_word_count_calc(file_list)
   file_list.sum { |file| word_count_calc(file) }
 end
 
-def word_line_size_count_depending_options(option, argument_filename)
+def word_line_size_count_in_array(acquisition_argument_filename)
   array_wc_count = []
-  argument_filename.each do |file|
-    size_count = size_count_calc(file)
-    line_count = line_count_calc(file)
-    word_count = word_count_calc(file)
-    array_wc_count << { line_count:, word_count:, size_count:, file: }
-  end
-
-  if argument_filename.empty?
+  if acquisition_argument_filename.empty?
     standard_input_text = $stdin.read
     size_count = standard_input_text.bytesize
     line_count = standard_input_text.count("\n")
     word_count = standard_input_text.split("\n").sum { |line| line.split.length }
     array_wc_count << { line_count:, word_count:, size_count:, file: '' }
+
+  elsif acquisition_argument_filename.count.positive?
+    acquisition_argument_filename.each do |file|
+      size_count = size_count_calc(file)
+      line_count = line_count_calc(file)
+      word_count = word_count_calc(file)
+      array_wc_count << { line_count:, word_count:, size_count:, file: }
+    end
+
+    if acquisition_argument_filename.count > 1
+      line_count = total_line_count_calc(acquisition_argument_filename)
+      word_count = total_word_count_calc(acquisition_argument_filename)
+      size_count = total_size_count_calc(acquisition_argument_filename)
+      file = 'total'.ljust(10)
+      array_wc_count << { line_count:, word_count:, size_count:, file: }
+    end
+    array_wc_count
   end
+end
 
-  array_wc_count = array_wc_count.map do |data|
-    if option[:l]
-      line_count_indented = data[:line_count].to_s.rjust(8)
-      file_indented = data[:file].ljust(10)
-    end
-
-    if option[:w]
-      word_count_indented = data[:word_count].to_s.rjust(8)
-      file_indented = data[:file].ljust(10)
-    end
-
-    if option[:c]
-      size_count_indented = data[:size_count].to_s.rjust(8)
-      file_indented = data[:file].ljust(10)
-    end
-
+def array_wc_count_adjust_indentation(option, array_wc_count)
+  array_wc_count.map do |data|
+    line_count_indented = data[:line_count].to_s.rjust(8) if option[:l]
+    word_count_indented = data[:word_count].to_s.rjust(8) if option[:w]
+    size_count_indented = data[:size_count].to_s.rjust(8) if option[:c]
     if !option[:l] && !option[:w] && !option[:c]
       line_count_indented = data[:line_count].to_s.rjust(8)
       word_count_indented = data[:word_count].to_s.rjust(8)
       size_count_indented = data[:size_count].to_s.rjust(8)
-      file_indented = data[:file].ljust(10)
     end
-
+    file_indented = data[:file].ljust(10)
     "#{line_count_indented} #{word_count_indented} #{size_count_indented} #{file_indented}"
   end
-
-  if argument_filename.count > 1
-    total_line_count = total_line_count_calc(argument_filename)
-    total_word_count = total_word_count_calc(argument_filename)
-    total_size_count = total_size_count_calc(argument_filename)
-
-    line_count_indented = total_line_count.to_s.rjust(8) if option[:l]
-
-    word_count_indented = total_word_count.to_s.rjust(8) if option[:w]
-
-    size_count_indented = total_size_count.to_s.rjust(8) if option[:c]
-
-    if !option[:l] && !option[:w] && !option[:c]
-      line_count_indented = total_line_count.to_s.rjust(8)
-      word_count_indented = total_word_count.to_s.rjust(8)
-      size_count_indented = total_size_count.to_s.rjust(8)
-    end
-
-    total_title_indented = 'total'.ljust(10)
-    array_wc_count << ("#{line_count_indented} #{word_count_indented} #{size_count_indented} #{total_title_indented}")
-  end
-  array_wc_count
 end
 
 def display_wc(array_wc_count)
@@ -126,6 +102,7 @@ def display_wc(array_wc_count)
 end
 
 option = select_options
-argument_filename = acquisition_argument_filename
-array_wc_count = word_line_size_count_depending_options(option, argument_filename)
+acquisition_argument_filename
+array_wc_count = word_line_size_count_in_array(acquisition_argument_filename)
+array_wc_count = array_wc_count_adjust_indentation(option, array_wc_count)
 display_wc(array_wc_count)
