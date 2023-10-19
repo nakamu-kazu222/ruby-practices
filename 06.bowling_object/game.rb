@@ -14,10 +14,10 @@ class Game
       if @frames[i].strike?
         point += @frames[i + 1].first_shot
         point += if @frames[i + 1].strike?
-                    @frames[i + 2].first_shot
-                  else
-                    @frames[i + 1].second_shot
-                  end
+                   @frames[i + 2].first_shot
+                 else
+                   @frames[i + 1].second_shot
+                 end
       elsif @frames[i].spare?
         point += @frames[i + 1].first_shot
       end
