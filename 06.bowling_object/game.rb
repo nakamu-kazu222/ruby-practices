@@ -6,7 +6,6 @@ class Game
   def initialize(scores)
     @shots = parse_scores(scores)
     @frames = create_frames
-    @point = 0
   end
 
   def parse_scores(scores)
@@ -29,19 +28,20 @@ class Game
   end
 
   def calc_score
+    point = 0
     10.times do |i|
       if @frames[i].strike?
-        @point += @frames[i + 1].first_shot
-        @point += if @frames[i + 1].strike?
+        point += @frames[i + 1].first_shot
+        point += if @frames[i + 1].strike?
                     @frames[i + 2].first_shot
                   else
                     @frames[i + 1].second_shot
                   end
       elsif @frames[i].spare?
-        @point += @frames[i + 1].first_shot
+        point += @frames[i + 1].first_shot
       end
-      @point += @frames[i].score
+      point += @frames[i].score
     end
-    @point
+    point
   end
 end
