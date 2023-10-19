@@ -8,6 +8,26 @@ class Game
     @frames = create_frames
   end
 
+  def calc_score
+    point = 0
+    10.times do |i|
+      if @frames[i].strike?
+        point += @frames[i + 1].first_shot
+        point += if @frames[i + 1].strike?
+                    @frames[i + 2].first_shot
+                  else
+                    @frames[i + 1].second_shot
+                  end
+      elsif @frames[i].spare?
+        point += @frames[i + 1].first_shot
+      end
+      point += @frames[i].score
+    end
+    point
+  end
+
+  private
+
   def parse_scores(scores)
     shots = []
     scores.each do |s|
@@ -25,23 +45,5 @@ class Game
     @shots.each_slice(2).map do |first, second|
       Frame.new(first, second)
     end
-  end
-
-  def calc_score
-    point = 0
-    10.times do |i|
-      if @frames[i].strike?
-        point += @frames[i + 1].first_shot
-        point += if @frames[i + 1].strike?
-                    @frames[i + 2].first_shot
-                  else
-                    @frames[i + 1].second_shot
-                  end
-      elsif @frames[i].spare?
-        point += @frames[i + 1].first_shot
-      end
-      point += @frames[i].score
-    end
-    point
   end
 end
