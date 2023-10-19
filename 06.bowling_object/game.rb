@@ -23,11 +23,9 @@ class Game
   end
 
   def create_frames
-    frames = []
-    @shots.each_slice(2) do |first, second|
-      frames << Frame.new(first, second)
+    @shots.each_slice(2).map do |first, second|
+      Frame.new(first, second)
     end
-    frames
   end
 
   def calc_score
