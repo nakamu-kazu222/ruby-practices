@@ -3,7 +3,7 @@
 class Frame
   attr_accessor :first_shot, :second_shot
 
-  STRIKE_SPARE_SCORE = 10
+  FULL_SCORE = 10
 
   def initialize(first_shot, second_shot)
     @first_shot = first_shot
@@ -15,10 +15,10 @@ class Frame
   end
 
   def strike?
-    @first_shot == STRIKE_SPARE_SCORE
+    @first_shot == FULL_SCORE
   end
 
   def spare?
-    !strike? && score == STRIKE_SPARE_SCORE
+    !strike? && score == FULL_SCORE
   end
 end
