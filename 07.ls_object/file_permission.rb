@@ -42,7 +42,7 @@ class FilePermission
     nlink = file_info[:nlink].to_s.rjust(2)
     uid = file_info[:uid].ljust(uid_size_max + 2)
     gid = file_info[:gid].ljust(gid_size_max + 2)
-    size = file_info[:size].to_s.rjust(size_max + 3)
+    size = file_info[:size].to_s.rjust(size_max + 5)
     mtime = format('%<month>2d %<day>2d %<hour>02d:%<min>02d', month: file_info[:mtime].month, day: file_info[:mtime].day, hour: file_info[:mtime].hour,
                                                                min: file_info[:mtime].min).ljust(12)
     name = file_info[:name]
