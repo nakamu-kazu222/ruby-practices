@@ -14,4 +14,16 @@ class Option
 
     @options
   end
+
+  def show_all_files?
+    @options[:a] || false
+  end
+
+  def reverse_order?
+    @options[:r] || false
+  end
+
+  def long_format?
+    @options[:l] || false
+  end
 end

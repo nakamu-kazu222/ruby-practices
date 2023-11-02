@@ -17,9 +17,9 @@ class FilePermission
   end
 
   def list_files(options)
-    @file_list = Dir.foreach('.').sort if options[:a]
-    @file_list = @file_list.reverse if options[:r]
-    @file_list = file_status_l_options if options[:l]
+    @file_list = Dir.foreach('.').sort if options.show_all_files?
+    @file_list = @file_list.reverse if options.reverse_order?
+    @file_list = file_status_l_options if options.long_format?
     @file_list
   end
 
