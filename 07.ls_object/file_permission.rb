@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FilePermission
+  COLUMN_COUNT = 3
   PERMISSION_SYMBOL = {
     '0' => '---',
     '1' => '--x',
@@ -21,6 +22,22 @@ class FilePermission
     @file_list = @file_list.reverse if options.reverse_order?
     @file_list = file_status_l_options if options.long_format?
     @file_list
+  end
+
+  def align_file_characters(array_files)
+    max_characters = array_files.max_by(&:size)
+    array_files.map { |max_characters_space| max_characters_space.ljust(max_characters.size + 4) }
+  end
+
+  def sort_file_vertical(array_files, options)
+    column_number = options.long_format? ? 1 : array_files.size.quo(COLUMN_COUNT).ceil
+    column_files = array_files.each_slice(column_number).to_a
+    array_of_filenames = []
+    return column_files if column_files.length < 2
+
+    array_of_filenames = column_files[0]
+    column_files[1..].each { |column| array_of_filenames = array_of_filenames.zip(column).map(&:flatten) }
+    array_of_filenames
   end
 
   private
