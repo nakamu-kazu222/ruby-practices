@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FilePermission
+class File
   COLUMN_COUNT = 3
   PERMISSION_SYMBOL = {
     '0' => '---',
