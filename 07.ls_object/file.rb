@@ -20,7 +20,7 @@ class File
   def list_files(options)
     @file_list = Dir.foreach('.').sort if options.show_all_files?
     @file_list = @file_list.reverse if options.reverse_order?
-    @file_list = file_status_l_options if options.long_format?
+    @file_list = format_file_status if options.long_format?
     @file_list
   end
 
@@ -67,7 +67,7 @@ class File
     "#{file_type(name)}#{mode.chars.map { |bit| PERMISSION_SYMBOL[bit] }.join} #{nlink} #{uid} #{gid} #{size} #{mtime} #{name}"
   end
 
-  def file_status_l_options
+  def format_file_status
     total_blocks = 0
     file_uid_size_max = 0
     file_gid_size_max = 0
