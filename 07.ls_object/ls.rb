@@ -8,7 +8,7 @@ require_relative 'file'
 require_relative 'display'
 
 options = Option.new
-options.parse_options
+options.parse_options(ARGV)
 
 file = File.new
 array_files = file.list_files(options)

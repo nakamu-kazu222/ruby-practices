@@ -5,13 +5,12 @@ class Option
     @options = {}
   end
 
-  def parse_options
+  def parse_options(arg)
     OptionParser.new do |opts|
       opts.on('-l') { @options[:l] = true }
       opts.on('-a') { @options[:a] = true }
       opts.on('-r') { @options[:r] = true }
-    end.parse(ARGV)
-
+    end.parse(arg)
     @options
   end
 
