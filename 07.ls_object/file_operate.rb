@@ -89,8 +89,8 @@ class FileOperate
   end
 
   def file_type(file)
-    return '-' if File.file?(file)
     return 'l' if File.symlink?(file)
+    return '-' if File.file?(file)
     return 'd' if File.directory?(file)
     return 'c' if File.chardev?(file)
     return 'b' if File.blockdev?(file)
