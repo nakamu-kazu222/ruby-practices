@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FileOperate
+class FileDetail
   PERMISSION_SYMBOL = {
     '0' => '---',
     '1' => '--x',
