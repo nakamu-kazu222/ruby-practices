@@ -4,7 +4,7 @@ require 'optparse'
 require 'fileutils'
 require 'etc'
 require_relative 'option'
-require_relative 'file_operate'
+require_relative 'file_detail'
 require_relative 'display'
 
 options = Option.new
