@@ -3,8 +3,8 @@
 class Display
   COLUMN_COUNT = 3
 
-  def display_ls(array_of_filenames, options)
-    if options.long_format?
+  def display_ls(array_of_filenames, long_format)
+    if long_format
       array_of_filenames.each { |display_filename| puts display_filename }
     else
       array_of_filenames.each do |display_filename|
