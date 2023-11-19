@@ -5,14 +5,9 @@ class Display
 
   def display_ls(array_of_filenames, long_format)
     if long_format
-      array_of_filenames.each { |display_filename| puts display_filename }
+      display_long_format(array_of_filenames)
     else
-      array_of_filenames.each do |display_filename|
-        display_filename.each do |ls_filename|
-          print ls_filename
-        end
-        print "\n"
-      end
+      display_default_format(array_of_filenames)
     end
   end
 
@@ -24,6 +19,21 @@ class Display
 
     array_of_filenames = column_files[0]
     column_files[1..].each { |column| array_of_filenames = array_of_filenames.zip(column).map(&:flatten) }
-    array_of_filenames
+    display_ls(array_of_filenames, options.long_format?)
+  end
+
+  private
+
+  def display_long_format(array_of_filenames)
+    array_of_filenames.each { |display_filename| puts display_filename }
+  end
+
+  def display_default_format(array_of_filenames)
+    array_of_filenames.each do |display_filename|
+      display_filename.each do |ls_filename|
+        print ls_filename
+      end
+      print "\n"
+    end
   end
 end

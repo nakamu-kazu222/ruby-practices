@@ -14,5 +14,4 @@ file_detail = FileDetail.new(show_all_files: options.show_all_files?, reverse_or
 array_files = file_detail.l_option_formats_file(long_format: options.long_format?)
 
 display = Display.new
-array_of_filenames = display.sort_file_vertical(array_files, options)
-display.display_ls(array_of_filenames, options)
+display.sort_file_vertical(array_files, options)
