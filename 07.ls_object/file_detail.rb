@@ -12,15 +12,14 @@ class FileDetail
     '7' => 'rwx'
   }.freeze
 
-  def initialize
+  def initialize(show_all_files:, reverse_order:)
     @file_list = Dir.glob('*')
+    @file_list = Dir.foreach('.').sort if show_all_files
+    @file_list = @file_list.reverse if reverse_order
   end
 
-  def list_files(options)
-    @file_list = Dir.foreach('.').sort if options.show_all_files?
-    @file_list = @file_list.reverse if options.reverse_order?
-    @file_list = format_file_status if options.long_format?
-    @file_list
+  def l_option_formats_file(long_format:)
+    align_file_characters(long_format ? format_file_status : @file_list)
   end
 
   def align_file_characters(array_files)
