@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'etc'
+
 class FileDetail
   PERMISSION_SYMBOL = {
     '0' => '---',
