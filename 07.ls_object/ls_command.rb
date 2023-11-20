@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'optparse'
 require_relative 'option'
 require_relative 'file_detail'

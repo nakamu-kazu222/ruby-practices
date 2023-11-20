@@ -13,9 +13,7 @@ class FileFormatter
     column_files[1..].each { |column| array_of_filenames = array_of_filenames.zip(column).map(&:flatten) }
     array_of_filenames = array_of_filenames.map(&:compact)
 
-    if options.long_format?
-      array_of_filenames = array_of_filenames.map { |lines| [lines.join("\n")] }
-    end
+    array_of_filenames = array_of_filenames.map { |lines| [lines.join("\n")] } if options.long_format?
 
     array_of_filenames
   end
